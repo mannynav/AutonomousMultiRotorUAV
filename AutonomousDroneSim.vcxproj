@@ -115,6 +115,8 @@
     <ClInclude Include="Config.hpp" />
     <ClInclude Include="Dronemodel.hpp" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PositionController.hpp" />
+    <ClInclude Include="RLS.h" />
     <ClInclude Include="Trajectories.hpp" />
   </ItemGroup>
   <ItemGroup>

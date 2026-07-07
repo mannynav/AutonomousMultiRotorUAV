@@ -147,3 +147,88 @@ State rk4Step(const Plant& plant, const State& s, double omega_total, const Inpu
 
 
 }
+
+
+// ------------------------------------------------------------
+//  LPV linearisation of the rotational dynamics, discretised
+//  with forward Euler. Uses the BELIEVED inertia, never the
+//  plant's. State for this model: [phi phi_dot theta theta_dot
+//  psi psi_dot], inputs [U2 U3 U4].
+// ------------------------------------------------------------
+
+struct LpvMatrices {
+	Eigen::Matrix<double, 6, 6> Ad;
+	Eigen::Matrix<double, 6, 3> Bd;
+	Eigen::Matrix<double, 3, 6> Cd;
+};
+
+inline LpvMatrices lpvDiscrete(const InertiaEstimate& I, const State& s, double omega_total, double Ts) {
+	const double phi = s(9), theta = s(10);
+
+	// Current Euler rates - the LPV "parameters" the model varies with
+	const Eigen::Vector3d rates = eulerRateMatrix(phi, theta) * s.segment<3>(3);
+	const double phi_dot = rates(0), theta_dot = rates(1);
+
+	Eigen::Matrix<double, 6, 6> A = Eigen::Matrix<double, 6, 6>::Zero();
+	A(0, 1) = 1.0;
+	A(1, 3) = -omega_total * constants::Jtp / I.Ix;
+	A(1, 5) = theta_dot * (I.Iy - I.Iz) / I.Ix;
+	A(2, 3) = 1.0;
+	A(3, 1) = omega_total * constants::Jtp / I.Iy;
+	A(3, 5) = phi_dot * (I.Iz - I.Ix) / I.Iy;
+	A(4, 5) = 1.0;
+	A(5, 1) = (theta_dot / 2.0) * (I.Ix - I.Iy) / I.Iz;
+	A(5, 3) = (phi_dot / 2.0) * (I.Ix - I.Iy) / I.Iz;
+
+	Eigen::Matrix<double, 6, 3> B = Eigen::Matrix<double, 6, 3>::Zero();
+	B(1, 0) = 1.0 / I.Ix;
+	B(3, 1) = 1.0 / I.Iy;
+	B(5, 2) = 1.0 / I.Iz;
+
+	LpvMatrices out;
+	out.Ad = Eigen::Matrix<double, 6, 6>::Identity() + Ts * A;
+	out.Bd = Ts * B;
+	out.Cd = Eigen::Matrix<double, 3, 6>::Zero();
+	out.Cd(0, 0) = 1.0;	// phi
+	out.Cd(1, 2) = 1.0;	// theta
+	out.Cd(2, 4) = 1.0;	// psi
+	return out;
+}
+
+
+// ------------------------------------------------------------
+//  Rotor mixing. U demands -> individual rotor speeds. The mixer
+//  matrix is constant so its inverse is computed exactly once.
+// ------------------------------------------------------------
+struct RotorSpeeds {
+	Eigen::Vector4d omega;	// individual rotor speeds [rad/s]
+	double omega_total;		// w1 - w2 + w3 - w4 (gyroscopic term)
+};
+
+inline RotorSpeeds mixRotors(const Input& u) {
+	static const Eigen::Matrix4d M_inv = [] {
+		Eigen::Matrix4d M;
+		M << 1, 1, 1, 1,
+			0, 1, 0, -1,
+			-1, 0, 1, 0,
+			-1, 1, -1, 1;
+		return M.inverse().eval();
+		}();
+
+	Eigen::Vector4d UC;
+	UC << u(0) / constants::ct,
+		u(1) / (constants::ct * constants::arm_length),
+		u(2) / (constants::ct * constants::arm_length),
+		u(3) / constants::cq;
+
+	const Eigen::Vector4d omega_sq = M_inv * UC;
+	if ((omega_sq.array() <= 0.0).any())
+		throw std::runtime_error(
+			"Negative rotor speed squared - trajectory too aggressive or gains need tuning");
+
+	RotorSpeeds out;
+	out.omega = omega_sq.array().sqrt();
+	out.omega_total = out.omega(0) - out.omega(1) + out.omega(2) - out.omega(3);
+	return out;
+}
+

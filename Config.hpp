@@ -24,9 +24,11 @@ namespace constants {
 	inline constexpr double Jtp = 1.302e-6;							// rotor inertia [kg*m^2]
 }
 
+
 // Inertia + mass of the airframe. The plant owns the true values.
 // The controller only ever gets a believed copy seeded from here -
 // after that the estimator owns the belief, not this struct.
+
 struct PhysicalParams {
 	double Ix{ 0.0034 };	// [kg*m^2]
 	double Iy{ 0.0034 };	// [kg*m^2]

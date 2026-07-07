@@ -18,6 +18,12 @@
     <ClInclude Include="Dronemodel.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PositionController.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RLS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
