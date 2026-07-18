@@ -1,14 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="test.cpp" />
-    <ClCompile Include="pch.cpp" />
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h" />
     <ClInclude Include="Config.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -21,7 +18,16 @@
     <ClInclude Include="PositionController.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RLS.h">
+    <ClInclude Include="RLS.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MPC.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulation.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Csv.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

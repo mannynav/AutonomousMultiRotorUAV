@@ -63,7 +63,7 @@ struct ControlParams {
 
 struct SimParams {
 	double total_time{ 100.0 };		// [s]
-	int trajectory_id{ 1 };			// 1=Helix 2=StraightLine 3=Wave 4=VerticalWave
+	int trajectory_id{ 2 };			// 1=Helix 2=StraightLine 3=Wave 4=VerticalWave
 };
 
 struct Config {

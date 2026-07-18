@@ -98,7 +98,7 @@ struct RigidBodyPlant
 		const double u = s(0), v = s(1), w = s(2);
 		const double p = s(3), q = s(4), r = s(5);
 		const double phi = s(9), theta = s(10), psi = s(11);
-		const double U1 = u_in(1), U2 = u_in(1), U3 = u_in(2), U4 = u_in(3);
+		const double U1 = u_in(0), U2 = u_in(1), U3 = u_in(2), U4 = u_in(3);
 		const auto& pp = params;
 
 

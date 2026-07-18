@@ -77,10 +77,12 @@ struct StraightLine {
 		out.x = 2.0 * time_vector / 20.0 + 1.0;
 		out.y = 2.0 * time_vector / 20.0 - 2.0;
 		out.z = params.initial_height + delta_height / final_t * time_vector;
+
 		// Velocity
 		out.x_dot = Eigen::ArrayXd::Constant(t_length, 0.1);
 		out.y_dot = Eigen::ArrayXd::Constant(t_length, 0.1);
 		out.z_dot = Eigen::ArrayXd::Constant(t_length, delta_height / final_t);
+
 		// Acceleration
 		out.x_ddot = Eigen::ArrayXd::Zero(t_length);
 		out.y_ddot = Eigen::ArrayXd::Zero(t_length);
