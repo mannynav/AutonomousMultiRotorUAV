@@ -32,8 +32,8 @@ struct TrajectoryData {
 // ------------------------------------------------------------
 template<typename T>
 concept TrajectoryGenerator =
-	requires(const T gen, const TrajectoryParams & params,
-const Eigen::ArrayXd & time_vector, double delta_height) {
+requires(const T gen, const TrajectoryParams & params, const Eigen::ArrayXd & time_vector, double delta_height)
+{
 	{ gen.generateTrajectory(params, time_vector, delta_height) }
 	-> std::same_as<TrajectoryData>;
 };
