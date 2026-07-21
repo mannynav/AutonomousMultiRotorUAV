@@ -1,3 +1,5 @@
+# Autonomous MultiRotor UAV
+
 A 6-DOF quadrotor flight simulator in modern C++20 with cascaded control and online parameter estimation. Built around compile-time polymorphism — C++20 concepts define the contracts, `std::variant` handles runtime dispatch, and the plant and estimator are template policies with zero runtime cost.
 
 ---
