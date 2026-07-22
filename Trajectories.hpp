@@ -87,6 +87,9 @@ struct StraightLine {
 		out.x_ddot = Eigen::ArrayXd::Zero(t_length);
 		out.y_ddot = Eigen::ArrayXd::Zero(t_length);
 		out.z_ddot = Eigen::ArrayXd::Zero(t_length);
+
+		std::cout << "Straight line check" << std::endl;
+
 		return out;
 	}
 };
